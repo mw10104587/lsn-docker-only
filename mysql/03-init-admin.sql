@@ -1,0 +1,1 @@
+INSERT INTO `users` (`id`, `identity`, `username`, `password`, `created`, `modified`) VALUES ('100', 'admin', 'admin', '$2y$10$avz7oP5fKvuBpUlzWWf7WeefsnpqQIHHhSrTHErqvHvlZ9mEhTMti', '2021-11-07 23:51:47.000000', '2021-11-07 23:51:47.000000');
