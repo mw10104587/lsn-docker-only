@@ -28,7 +28,7 @@ RUN docker-php-ext-configure pdo_mysql --with-pdo-mysql=mysqlnd \
   sockets
 #install composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-RUN php -r "if (hash_file('sha384', 'composer-setup.php') === '906a84df04cea2aa72f40b5f787e49f22d4c2f19492ac310e8cba5b96ac8b64115ac402c8cd292b8a03482574915d1a8') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+RUN php -r "if (hash_file('sha384', 'composer-setup.php') === '55ce33d7678c5a611085589f1f3ddf8b3c52d662cd01d4ba75c0ee0459970c2200a51f492d557530c71c15d8dba01eae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
 RUN php composer-setup.php
 RUN php -r "unlink('composer-setup.php');"
 # Execute the following command to move the composer.phar to a directory that is in your path
@@ -38,7 +38,11 @@ ENV APP_HOME /var/www/html
 #change uid and gid of apache to docker user uid/gid
 RUN usermod -u 1000 www-data && groupmod -g 1000 www-data
 #change the web_root to cakephp /var/www/html/webroot folder
-RUN sed -i -e "s/html/html\/webroot/g" /etc/apache2/sites-enabled/000-default.conf
+COPY ./apache2/000-default.conf /etc/apache2/sites-enabled/000-default.conf
+RUN mkdir -p /etc/apache2/ssl
+COPY ./apache2/cert-key.pem /etc/apache2/ssl/
+COPY ./apache2/cert.pem /etc/apache2/ssl/
+# RUN sed -i -e "s/html/html\/webroot/g" /etc/apache2/sites-enabled/000-default.conf
 RUN sed -i -e "s/<Directory \/var\/www/<Directory \/var\/www\/html\/webroot/" /etc/apache2/apache2.conf
 RUN sed -i -e "s/AllowOverride None/AllowOverride All/g" /etc/apache2/apache2.conf
 
